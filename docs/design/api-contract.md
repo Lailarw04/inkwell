@@ -5,10 +5,19 @@ Success: 201 { user: UserPublic, accessToken: string, refreshToken: string }
 Errors:
 400 EMAIL_ALREADY_REGISTERED — "This email is already registered."
 400 WEAK_PASSWORD — "Password does not meet strength requirements."
+
 ## POST /api/auth/login
 Request: { email: string, password: string }
 Success: 200 { user: UserPublic, accessToken: string, refreshToken: string }
 Errors:
 401 INVALID_CREDENTIALS — "Invalid email or password."
+
 ## GET /api/posts?page=n
 Success: 200 { posts: PostPublic[], page: number, hasMore: boolean }
+
+## POST /api/posts/:id/comments
+Request: { id: string, body: string }
+Success: 201 { comment: PUBLISHED }
+Errors:
+400 EMPTY_CONTENTS - "Input field is empty."
+403 UNKNOWN_USER - "Account needed to leave a comment."
