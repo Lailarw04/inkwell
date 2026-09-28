@@ -11,6 +11,7 @@ import express from "express";
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import postRoutes from "./routes/post.routes.js";
+import "./events/listeners/log-published-posts.listener.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -38,6 +39,12 @@ app.get("/api/health", (req, res) => {
 app.get("/api/version", (req, res) => {
     res.json({status: "ok", version: "0.1.0"});
 });
+
+app.get("/api/stats", (req, res) => {
+    const inkwellStats = {
+        totalPosts: totalPublishedPosts
+    };
+})
 
 app.listen(PORT, () => {
     console.log(`Inkwell API listening on port ${PORT}`);
