@@ -8,6 +8,8 @@ import request from "supertest";
 import { app } from "../../app.js";
 import { prisma } from "../../db/client.js";
 import { resetDatabase } from "../../test-utils/fixtures.js";
+import { createTestUser } from "../../test-utils/fixtures.js";
+import { MAX_PAGE_SIZE } from "../../utils/pagination.js";
 
 beforeEach(async () => {
     await resetDatabase();
@@ -58,3 +60,23 @@ test("full flow: register, publish, and browse (US-01, US-03, US-04 validation)"
     expect(secondAttempt.status).toBe(400);
     expect(secondAttempt.body.error.code).toBe("EMAIL_ALREADY_REGISTERED");
  });
+
+test("an oversized pageSize is set to the maximum (STRIDE: Denial of Service)", async () => {
+    // Arrange: more published pages than the limit
+    const author = await createTestUser();
+    await prisma.post.createMany({
+        data: Array.from({ length: MAX_PAGE_SIZE + 5 }, (_, i) => ({
+            authorId: author.id,
+            title: `Post ${i}`,
+            body: "Body",
+            status: "PUBLISHED",
+            publishedAt: new Date(2026, 0, 1, 0, i),
+        })),
+    });
+    const res = await request(app).get("/api/posts?page=1&pageSize=100000");
+    
+    // Assert: the server returns at most MAX_PAGE_SIZE and says more exist
+    expect(res.status).toBe(200);
+    expect(res.body.posts).toHaveLength(MAX_PAGE_SIZE);
+    expect(res.body.hasMore).toBe(true);
+});
