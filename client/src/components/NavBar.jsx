@@ -4,6 +4,8 @@
 // md: and lg: prefixes layer on enhancements for larger viewports —
 // never the reverse.
 
+import { Link, NavLink, useNavigate } from "react-router-dom";
+
 export function NavBar() {
     return (
         <nav className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
