@@ -38,6 +38,9 @@ for (const viewport of viewports) {
             const registerRes = await request.post("http://localhost:4000/api/auth/register", {
             data: { email, displayName: "E2E Tester", password: "correcthorse" },
         });
+
+            console.log("Register status:", registerRes.status());
+            console.log("Register body:", await registerRes.text());
         expect(registerRes.ok()).toBe(true);
         await page.goto("http://localhost:5173/login");
         // Section 4.1: real interaction, not simulated events — Playwright
