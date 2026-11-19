@@ -40,7 +40,7 @@ export const AuthService = {
         const tokens = TokenService.issueTokens(user);
         return { user, ...tokens };
     },
-    async function ({ email, password }) {
+    async login ({ email, password }) {
         const user = await UserRepository.findByEmail(email);
         if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
             logger.warn({ event: "auth.login.failed", email }, "Failed login attempt");

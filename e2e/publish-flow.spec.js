@@ -38,6 +38,9 @@ for (const viewport of viewports) {
             const registerRes = await request.post("http://localhost:4000/api/auth/register", {
             data: { email, displayName: "E2E Tester", password: "correcthorse" },
         });
+
+            console.log("Register status:", registerRes.status());
+            console.log("Register body:", await registerRes.text());
         expect(registerRes.ok()).toBe(true);
         await page.goto("http://localhost:5173/login");
         // Section 4.1: real interaction, not simulated events — Playwright
@@ -47,7 +50,7 @@ for (const viewport of viewports) {
             await page.getByLabel("Password").fill("correcthorse");
             await page.getByRole("button", { name: "Log In" }).click();
             await expect(page).toHaveURL("http://localhost:5173/");
-            await page.getByRole("link", { name: "Write" }).click();
+            await page.getByRole("link", { name: "Write", exact: true }).click();
             await page.getByLabel("Title").fill(title);
             await page.getByLabel("Body").fill("Published end to end.");
             await page.getByRole("button", { name: "Publish" }).click();
