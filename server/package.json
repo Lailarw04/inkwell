@@ -20,6 +20,9 @@
     "pino": "^10.4.0",
     "prisma": "^7.10.0"
   },
+  "overrides": {
+    "effect": "3.22.1"
+  },
   "engines": {
     "node": ">=22.0.0"
   },
