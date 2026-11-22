@@ -62,9 +62,8 @@ jobs:
       - name: Wait for staging to respond #Section 4.2, step 3
         run: |
           for attempt in $(seq 1 40); do
-            if curl -fsS --max-time 30 "$APP_URL/api/health";
-            then
-            echo; echo "Staging answered on attempt $attempt"; exit 0
+            if curl -fsS --max-time 30 "$APP_URL/api/health"; then
+              echo; echo "Staging answered on attempt $attempt"; exit 0
             fi
             sleep 15
           done
@@ -96,4 +95,4 @@ jobs:
       - name: Notify team of deployment result #Section 4.2, step 4
         if: always()
         run: |
-          echo "Staging deployment of ${SHA}: ${{ job.status } }"
+          echo "Staging deployment of ${SHA}: ${{ job.status }}"
