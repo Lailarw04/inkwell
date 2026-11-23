@@ -43,13 +43,12 @@ jobs:
       - name: Validate the requested SHA
         run: |
           if [[ ! "$SHA" =~ ^[0-9a-f]{40}$ ]]; then
-          echo "::error::confirm_sha must be a full 40-character lowercase Git SHA"
-          exit 1
+            echo "::error::confirm_sha must be a full 40-character lowercase Git SHA"
+            exit 1
           fi
       - name: Deploy the staging-verified image to production
         run: |
-          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/inkwell
-          -server:${SHA}"
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/inkwell-server:${SHA}"
           echo "Deploying $IMAGE"
           curl -fsS -X POST "${DEPLOY_HOOK}&imgURL=${IMAGE}"
           
